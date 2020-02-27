@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.902
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI_ClothColliders", "AI_ClothColliders.csproj", "{7B400A6E-912D-4D92-9680-A6A83E695CD6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI_ClothColliders", "AI_ClothColliders\AI_ClothColliders.csproj", "{7B400A6E-912D-4D92-9680-A6A83E695CD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
