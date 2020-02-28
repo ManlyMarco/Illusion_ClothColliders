@@ -6,16 +6,15 @@ namespace AI_ClothColliders
     {
         public string BoneName;
         public float ColliderRadius;
-        public float CollierHeight;
         public Vector3 ColliderCenter;
-        public string ColliderNamePostfix;
+        public string UniqueId;
 
-        public SphereColliderData(string boneName, float colliderRadius, Vector3 colliderCenter, string colliderNamePostfix = "")
+        public SphereColliderData(string boneName, float colliderRadius, Vector3 colliderCenter, string uniqueId)
         {
             BoneName = boneName;
             ColliderRadius = colliderRadius;
             ColliderCenter = colliderCenter;
-            ColliderNamePostfix = colliderNamePostfix;
+            UniqueId = uniqueId;
         }
     }
 }
