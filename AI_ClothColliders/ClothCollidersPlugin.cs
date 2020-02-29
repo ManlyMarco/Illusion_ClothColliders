@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Xml.Linq;
 using AIChara;
 using BepInEx;
+using BepInEx.Harmony;
 using BepInEx.Logging;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -41,6 +43,9 @@ namespace AI_ClothColliders
                 }
             }
 
+            Logger.LogInfo($"Found collider datas for {SphereColliders.Keys.Union(CapsuleColliders.Keys).Count()} items");
+
+            HarmonyWrapper.PatchAll(typeof(ClothCollidersPlugin));
             CharacterApi.RegisterExtraBehaviour<ClothColliderController>(GUID);
         }
 
@@ -59,6 +64,8 @@ namespace AI_ClothColliders
                 var category = (ChaListDefine.CategoryNo)Enum.Parse(typeof(ChaListDefine.CategoryNo), clothData.Attribute("category")?.Value ?? throw new FormatException("Missing category attribute"));
                 var clothPartId = category - ChaListDefine.CategoryNo.fo_top;
 
+                var clothName = clothData.Attribute("clothName")?.Value ?? throw new FormatException("Missing clothName attribute");
+
                 var itemId = int.Parse(clothData.Attribute("id")?.Value ?? throw new FormatException("Missing id attribute"));
                 var resolvedItemId = UniversalAutoResolver.TryGetResolutionInfo(itemId, category, manifest.GUID);
                 if (resolvedItemId != null)
@@ -71,20 +78,20 @@ namespace AI_ClothColliders
                     Logger.LogWarning($"Failed to resolve id={itemId} category={category} guid={manifest.GUID}");
                 }
 
-                var uniqueId = clothPartId + "-" + itemId;
+                var uniqueId = clothPartId + "-" + clothName + "_" + itemId;
                 var dictKey = GetDictKey(clothPartId, itemId);
 
                 foreach (var colliderData in clothData.Elements())
                 {
                     if (colliderData.Name == "SphereColliderPair")
                     {
-                        var result = new SphereColliderPair(GetSphereColliderData(colliderData.Element("first"), uniqueId), GetSphereColliderData(colliderData.Element("second"), uniqueId));
+                        var result = new SphereColliderPair(GetSphereColliderData(colliderData.Element("first"), uniqueId), GetSphereColliderData(colliderData.Element("second"), uniqueId), clothName);
                         var list = GetOrAddList(SphereColliders, dictKey);
                         list.Add(result);
                     }
                     else if (colliderData.Name == "CapsuleCollider")
                     {
-                        var result = GetCapsuleColliderData(colliderData.Element("first"), uniqueId);
+                        var result = GetCapsuleColliderData(colliderData, uniqueId, clothName);
                         var list = GetOrAddList(CapsuleColliders, dictKey);
                         list.Add(result);
                     }
@@ -92,7 +99,6 @@ namespace AI_ClothColliders
                     {
                         throw new FormatException("Unknown collider type " + colliderData.Name);
                     }
-                    Logger.LogDebug($"Added {colliderData.Name}: dictKey={dictKey} value={colliderData}");
                 }
             }
         }
@@ -117,24 +123,28 @@ namespace AI_ClothColliders
         {
             if (element == null) return null;
 
-            return new SphereColliderData(
+            var colliderData = new SphereColliderData(
                 element.Attribute("boneName")?.Value ?? throw new FormatException("Missing boneName attribute"),
                 float.Parse(element.Attribute("radius")?.Value ?? throw new FormatException("Missing radius attribute"), CultureInfo.InvariantCulture),
                 ParseVector3(element.Attribute("center")?.Value ?? throw new FormatException("Missing center attribute")),
                 uniqueId);
+            Logger.LogDebug($"Added SphereCollider: boneName={colliderData.BoneName} radius={colliderData.ColliderRadius} center={colliderData.ColliderCenter}");
+            return colliderData;
         }
 
-        private CapsuleColliderData GetCapsuleColliderData(XElement element, string uniqueId)
+        private CapsuleColliderData GetCapsuleColliderData(XElement element, string uniqueId, string clothName)
         {
             if (element == null) return null;
 
-            return new CapsuleColliderData(
+            var colliderData = new CapsuleColliderData(
                 element.Attribute("boneName")?.Value ?? throw new FormatException("Missing boneName attribute"),
                 float.Parse(element.Attribute("radius")?.Value ?? throw new FormatException("Missing radius attribute"), CultureInfo.InvariantCulture),
                 float.Parse(element.Attribute("height")?.Value ?? throw new FormatException("Missing height attribute"), CultureInfo.InvariantCulture),
                 ParseVector3(element.Attribute("center")?.Value ?? throw new FormatException("Missing center attribute")),
                 int.Parse(element.Attribute("direction")?.Value ?? throw new FormatException("Missing direction attribute"), CultureInfo.InvariantCulture),
-                uniqueId);
+                uniqueId, clothName);
+            Logger.LogDebug($"Added CapsuleCollider: boneName={colliderData.BoneName} radius={colliderData.ColliderRadius} height={colliderData.CollierHeight} center={colliderData.ColliderCenter} direction={colliderData.Direction}");
+            return colliderData;
         }
 
         private Vector3 ParseVector3(string value)
@@ -144,7 +154,7 @@ namespace AI_ClothColliders
             return new Vector3(
                 float.Parse(parts[0], CultureInfo.InvariantCulture),
                 float.Parse(parts[1], CultureInfo.InvariantCulture),
-                float.Parse(parts[3], CultureInfo.InvariantCulture));
+                float.Parse(parts[2], CultureInfo.InvariantCulture));
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(ChaControl), nameof(ChaControl.ChangeCustomClothes))]

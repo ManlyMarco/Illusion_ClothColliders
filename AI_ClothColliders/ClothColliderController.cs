@@ -16,36 +16,56 @@ namespace AI_ClothColliders
             var clothObj = ChaControl.objClothes[kind];
             if (clothPart == null || clothObj == null) return;
 
-            // Sphere colliders -------------
             ClothCollidersPlugin.SphereColliders.TryGetValue(ClothCollidersPlugin.GetDictKey(kind, clothPart.id), out var colliders);
-            var sphereResults = new ClothSphereColliderPair[colliders?.Count ?? 0];
-            if (colliders != null)
-            {
-                for (var index = 0; index < colliders.Count; index++)
-                {
-                    var colliderPair = colliders[index];
-                    var c1 = AddSphereCollider(colliderPair.first);
-                    var c2 = AddSphereCollider(colliderPair.second);
-                    sphereResults[index] = new ClothSphereColliderPair(c1, c2);
-                }
-            }
-
-            // Capsule colliders -------------
             ClothCollidersPlugin.CapsuleColliders.TryGetValue(ClothCollidersPlugin.GetDictKey(kind, clothPart.id), out var capsuleColliders);
-            var capsuleResults = new CapsuleCollider[capsuleColliders?.Count ?? 0];
-            if (capsuleColliders != null)
-            {
-                for (var index = 0; index < capsuleColliders.Count; index++)
-                {
-                    var capsuleCollider = capsuleColliders[index];
-                    capsuleResults[index] = AddCapsuleCollider(capsuleCollider);
-                }
-            }
 
-            // Applying and cleanup -------------
+            if ((colliders == null || colliders.Count == 0) && (capsuleColliders == null || capsuleColliders.Count == 0)) return;
+
             var targets = clothObj.GetComponentsInChildren<Cloth>();
             foreach (var target in targets)
             {
+                var sphereTargets = colliders?.Where(x => x.ClothName == target.name).ToList();
+                var sphereResults = new ClothSphereColliderPair[sphereTargets?.Count ?? 0];
+                if (sphereTargets != null && sphereTargets.Count > 0)
+                {
+                    for (var index = 0; index < sphereTargets.Count; index++)
+                    {
+                        var colliderPair = sphereTargets[index];
+                        var c1 = AddSphereCollider(colliderPair.first);
+                        var c2 = AddSphereCollider(colliderPair.second);
+                        sphereResults[index] = new ClothSphereColliderPair(c1, c2);
+                    }
+
+                    if (sphereResults.Length > 0)
+                    {
+                        ClothCollidersPlugin.Logger.LogDebug("Added sphere colliders to bone " + target.name + ": " +
+                                                             string.Join(", ",
+                                                                 sphereResults
+                                                                     .SelectMany(pair => new[] { pair.second, pair.first })
+                                                                     .Where(x => x != null)
+                                                                     .Select(x => x.transform.parent.name)));
+                    }
+                }
+
+                var capsuleTargets = capsuleColliders?.Where(x => x.ClothName == target.name).ToList();
+                var capsuleResults = new CapsuleCollider[capsuleColliders?.Count ?? 0];
+                if (capsuleTargets != null && capsuleTargets.Count > 0)
+                {
+                    for (var index = 0; index < capsuleTargets.Count; index++)
+                    {
+                        var capsuleCollider = capsuleTargets[index];
+                        capsuleResults[index] = AddCapsuleCollider(capsuleCollider);
+                    }
+
+                    if (capsuleResults.Length > 0)
+                    {
+                        ClothCollidersPlugin.Logger.LogDebug("Added capsule colliders to bone " + target.name + ": " +
+                                                             string.Join(", ",
+                                                                 capsuleResults.Where(x => x != null)
+                                                                     .Select(x => x.transform.parent.name)));
+                    }
+                }
+
                 // Destroy old colliders and apply the newly created
                 // todo a better way of doing this? would interfere with other plugins adding colliders
                 foreach (var existing in target.sphereColliders)
@@ -56,6 +76,7 @@ namespace AI_ClothColliders
                     if (!sphereResults.Any(pair => pair.first == existing.second || pair.second == existing.second))
                         DestroyImmediate(existing.second);
                 }
+
                 target.sphereColliders = sphereResults;
 
                 foreach (var existing in target.capsuleColliders)
@@ -63,8 +84,20 @@ namespace AI_ClothColliders
                     if (capsuleResults.All(collider => collider != existing))
                         DestroyImmediate(existing);
                 }
+
                 target.capsuleColliders = capsuleResults;
             }
+
+            // Debug logging ---
+            var targetBonesNames = (colliders ?? Enumerable.Empty<SphereColliderPair>()).Select(x => x.ClothName)
+                .Concat((capsuleColliders ?? Enumerable.Empty<CapsuleColliderData>()).Select(x => x.ClothName)).Distinct().ToList();
+            var clothNames = targets.Where(x => x != null).Select(cloth => cloth.name).ToList();
+
+            ClothCollidersPlugin.Logger.LogDebug("Cleared old colliders and applied new colliders to cloths: " + string.Join(", ", targetBonesNames.Intersect(clothNames)));
+
+            var missing = targetBonesNames.Except(clothNames).ToList();
+            if (missing.Count > 0)
+                ClothCollidersPlugin.Logger.LogWarning("Could not find following bones to apply colliders: " + string.Join(", ", missing.OrderBy(s => s)));
         }
 
         private SphereCollider AddSphereCollider(SphereColliderData sphereColliderData)

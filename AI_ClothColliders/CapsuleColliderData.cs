@@ -4,6 +4,7 @@ namespace AI_ClothColliders
 {
     internal class CapsuleColliderData
     {
+        public string ClothName { get; }
         public string BoneName;
         public float ColliderRadius;
         public float CollierHeight;
@@ -11,8 +12,10 @@ namespace AI_ClothColliders
         public int Direction;
         public string ColliderNamePostfix;
 
-        public CapsuleColliderData(string boneName, float colliderRadius, float collierHeight, Vector3 colliderCenter, int direction, string colliderNamePostfix = "")
+        public CapsuleColliderData(string boneName, float colliderRadius, float collierHeight, Vector3 colliderCenter,
+            int direction, string colliderNamePostfix, string clothName)
         {
+            ClothName = clothName;
             BoneName = boneName;
             ColliderRadius = colliderRadius;
             CollierHeight = collierHeight;
