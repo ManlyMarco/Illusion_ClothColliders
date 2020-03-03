@@ -21,7 +21,7 @@ namespace AI_ClothColliders
 
             if ((colliders == null || colliders.Count == 0) && (capsuleColliders == null || capsuleColliders.Count == 0)) return;
 
-            var targets = clothObj.GetComponentsInChildren<Cloth>();
+            var targets = clothObj.GetComponentsInChildren<Cloth>(true);
             foreach (var target in targets)
             {
                 var sphereTargets = colliders?.Where(x => x.ClothName == target.name).ToList();
