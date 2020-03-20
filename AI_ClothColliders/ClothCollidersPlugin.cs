@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,6 +12,7 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using KKAPI;
 using KKAPI.Chara;
+using KKAPI.Utilities;
 using Sideloader;
 using Sideloader.AutoResolver;
 using UnityEngine;
@@ -164,7 +166,11 @@ namespace AI_ClothColliders
             if (__instance != null)
             {
                 var controller = __instance.GetComponent<ClothColliderController>();
-                if (controller != null) controller.UpdateColliders(kind);
+                if (controller != null)
+                {
+                    //IEnumerator DelayedCo
+                    __instance.StartCoroutine(CoroutineUtils.CreateCoroutine(new WaitForEndOfFrame(), () => controller.UpdateColliders(kind)));
+                }
             }
         }
     }
