@@ -26,7 +26,7 @@ namespace AI_ClothColliders
     {
         public const string PluginName = "AI_ClothColliders";
         public const string GUID = "AI_ClothColliders";
-        public const string Version = "0.2";
+        public const string Version = "1.0";
         internal static new ManualLogSource Logger;
 
         private void Start()
