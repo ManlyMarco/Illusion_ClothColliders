@@ -46,6 +46,12 @@ namespace AI_ClothColliders
 
             Logger.LogInfo($"Found collider datas for {SphereColliders.Keys.Union(CapsuleColliders.Keys).Count()} items");
 
+            if (SphereColliders.Count == 0 && CapsuleColliders.Count == 0)
+            {
+                enabled = false;
+                return;
+            }
+
             HarmonyWrapper.PatchAll(typeof(ClothCollidersPlugin));
             CharacterApi.RegisterExtraBehaviour<ClothColliderController>(GUID);
         }
