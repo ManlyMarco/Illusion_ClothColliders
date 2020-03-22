@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -41,7 +40,7 @@ namespace AI_ClothColliders
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogError($"Failed to load collider data from {manifest.GUID} - {ex}");
+                    Logger.LogWarning($"Failed to load collider data from {manifest.GUID} - {ex.Message}");
                 }
             }
 
