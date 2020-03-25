@@ -1,5 +1,5 @@
 # AI_ClothColliders
-Plugin for AI-Shoujo that help mods with Cloth components add their own cloth Colliders to the character.
+Plugin for AI-Shoujo that allows zipmods to easily add cloth physics to clothes and make them interact with the characters. This plugin doesn't do anything by itself, you also need to get some compatible mods.
 
 [Preview video by R4setsu with his clothes mod](https://www.youtube.com/watch?v=9wcddjzqfhE)
 
