@@ -148,8 +148,23 @@ public class ClothColliderInfoExportWindow : EditorWindow
             {
                 var transformName = collider.transform.name.ToCharArray();
                 transformName[transformName.Length - 1] = 'R';
-                var s = new string(transformName);
-                var tr = GameObject.Find(s);
+                var rightName = new string(transformName);
+
+                var searchTarget = collider.transform;
+                Transform rightTransform = null;
+                while (true)
+                {
+                    searchTarget = searchTarget.parent;
+                    if (searchTarget == null) break;
+
+                    rightTransform = searchTarget.GetComponentsInChildren<Transform>().FirstOrDefault(x => x.name == rightName);
+                    if (rightTransform != null) break;
+                }
+                if (searchTarget == null && rightTransform == null)
+                    rightTransform = GameObject.Find(rightName)?.transform;
+
+                if (rightTransform == null) continue;
+
                 DestroyImmediate(tr.GetComponent(collider.GetType()));
                 foreach (var transform in tr.transform.Cast<Transform>().ToArray())
                 {
