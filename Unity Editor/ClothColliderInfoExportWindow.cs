@@ -165,16 +165,16 @@ public class ClothColliderInfoExportWindow : EditorWindow
 
                 if (rightTransform == null) continue;
 
-                DestroyImmediate(tr.GetComponent(collider.GetType()));
-                foreach (var transform in tr.transform.Cast<Transform>().ToArray())
+                DestroyImmediate(rightTransform.GetComponent(collider.GetType()));
+                foreach (var transform in rightTransform.Cast<Transform>().ToArray())
                 {
                     if (transform.name == collider.transform.name + "(Clone)")
                         DestroyImmediate(transform.gameObject);
                 }
 
                 UnityEditorInternal.ComponentUtility.CopyComponent(collider);
-                UnityEditorInternal.ComponentUtility.PasteComponentAsNew(tr);
-                var copy = tr.GetComponent(collider.GetType());
+                UnityEditorInternal.ComponentUtility.PasteComponentAsNew(rightTransform.gameObject);
+                var copy = rightTransform.GetComponent(collider.GetType());
 
                 var sp = copy as SphereCollider;
                 if (sp != null)
@@ -190,7 +190,7 @@ public class ClothColliderInfoExportWindow : EditorWindow
                     cp.center = new Vector3(center.x * -1, center.y, center.z);
                 }
 
-                Debug.Log("Added copy to " + tr.name);
+                Debug.Log("Added copy to " + rightTransform.name);
             }
         }
     }
