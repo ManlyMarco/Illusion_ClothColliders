@@ -8,7 +8,7 @@ namespace AI_ClothColliders
     [BepInPlugin(GUID, PluginName, Version)]
     public partial class ClothCollidersPlugin : BaseUnityPlugin
     {
-        public const string PluginName = "AI_ClothColliders";
-        public const string GUID = "AI_ClothColliders";
+        public const string PluginName = "HS2_ClothColliders";
+        public const string GUID = "HS2_ClothColliders";
     }
 }
