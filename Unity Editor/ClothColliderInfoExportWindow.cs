@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
@@ -148,18 +148,33 @@ public class ClothColliderInfoExportWindow : EditorWindow
             {
                 var transformName = collider.transform.name.ToCharArray();
                 transformName[transformName.Length - 1] = 'R';
-                var s = new string(transformName);
-                var tr = GameObject.Find(s);
-                DestroyImmediate(tr.GetComponent(collider.GetType()));
-                foreach (var transform in tr.transform.Cast<Transform>().ToArray())
+                var rightName = new string(transformName);
+
+                var searchTarget = collider.transform;
+                Transform rightTransform = null;
+                while (true)
+                {
+                    searchTarget = searchTarget.parent;
+                    if (searchTarget == null) break;
+
+                    rightTransform = searchTarget.GetComponentsInChildren<Transform>().FirstOrDefault(x => x.name == rightName);
+                    if (rightTransform != null) break;
+                }
+                if (searchTarget == null && rightTransform == null)
+                    rightTransform = GameObject.Find(rightName)?.transform;
+
+                if (rightTransform == null) continue;
+
+                DestroyImmediate(rightTransform.GetComponent(collider.GetType()));
+                foreach (var transform in rightTransform.Cast<Transform>().ToArray())
                 {
                     if (transform.name == collider.transform.name + "(Clone)")
                         DestroyImmediate(transform.gameObject);
                 }
 
                 UnityEditorInternal.ComponentUtility.CopyComponent(collider);
-                UnityEditorInternal.ComponentUtility.PasteComponentAsNew(tr);
-                var copy = tr.GetComponent(collider.GetType());
+                UnityEditorInternal.ComponentUtility.PasteComponentAsNew(rightTransform.gameObject);
+                var copy = rightTransform.GetComponent(collider.GetType());
 
                 var sp = copy as SphereCollider;
                 if (sp != null)
@@ -175,7 +190,7 @@ public class ClothColliderInfoExportWindow : EditorWindow
                     cp.center = new Vector3(center.x * -1, center.y, center.z);
                 }
 
-                Debug.Log("Added copy to " + tr.name);
+                Debug.Log("Added copy to " + rightTransform.name);
             }
         }
     }

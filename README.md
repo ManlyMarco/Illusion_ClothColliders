@@ -9,6 +9,7 @@ Plugin for AI-Shoujo that allows zipmods to easily add cloth physics to clothes 
 3. Extract the release to your game. The dll file should end up inside `Koikatu\BepInEx\plugins`.
 
 ## How to make my mod compatible
+There's a full guide available [here](https://github.com/ManlyMarco/AI_ClothColliders/blob/master/AI_Cloth_Colliders_Tutorial.pdf). Below you can see a condensed version of this guide.
 1. Get the [AI Shoujo Modding Tool](https://github.com/hooh-hooah/ModdingTool) and follow its readme to set up Unity Editor and open the project in it.
 2. Open the Modding project opened in Unity Editor, and drop [this file](https://raw.githubusercontent.com/ManlyMarco/AI_ClothColliders/master/Unity%20Editor/ClothColliderInfoExportWindow.cs) inside the `Assets/Editor` folder. After a moment a new menu option should appear on the menu bar - AI_ClothColliders.
 3. Make sure you have one character in the current scene. Place your clothes on the character, and set up the Cloth components on the clothes and colliders on the character. You need to link the colliders to the Cloth components.
