@@ -7,12 +7,12 @@ using UnityEngine;
 
 /// <summary>
 /// This is an Unity Editor script. To use it you need the correct version of Unity Editor for your game.
-/// Place this file in Unity Editor project in Assets/Editor folder, then use the AI_ClothColliders menu.
+/// Place this file in Unity Editor project in Assets/Editor folder, then use the IL_ClothColliders menu.
 /// How to use:
 /// 1 - Add the character model to the scene
 /// 2 - Add colliders to the character model's body, only add them to the left bones (ending with _L)
-/// 3 - Use menu option "AI_ClothColliders/Copy L colliders to R" to copy colliders to the right side, adjust if necessary
-/// 4 - Use menu option "AI_ClothColliders/Show cloth collider exporter window" and paste the result to your manifest.xml for use with the AI_ClothColliders plugim.
+/// 3 - Use menu option "IL_ClothColliders/Copy L colliders to R" to copy colliders to the right side, adjust if necessary
+/// 4 - Use menu option "IL_ClothColliders/Show cloth collider exporter window" and paste the result to your manifest.xml for use with the IL_ClothColliders plugim.
 /// Each cloth component is identified by its name, so you need to export each cloth component separately and then combine the exports into your zipmod's manifest.xml file.
 /// </summary>
 public class ClothColliderInfoExportWindow : EditorWindow
@@ -22,7 +22,7 @@ public class ClothColliderInfoExportWindow : EditorWindow
     private int _currentId;
     private string _export;
 
-    [MenuItem("AI_ClothColliders/Show cloth collider exporter window")]
+    [MenuItem("IL_ClothColliders/Show cloth collider exporter window")]
     public static void ShowWindow()
     {
         var w = GetWindow(typeof(ClothColliderInfoExportWindow));
@@ -66,7 +66,7 @@ public class ClothColliderInfoExportWindow : EditorWindow
         var doc = new XDocument();
         var root = new XElement("manifest");
         doc.AddFirst(root);
-        var root2 = new XElement("AI_ClothColliders");
+        var root2 = new XElement("ClothColliders");
         root.AddFirst(root2);
         var clothRoot = new XElement("cloth");
         clothRoot.SetAttributeValue("id", _currentId.ToString());
@@ -139,7 +139,7 @@ public class ClothColliderInfoExportWindow : EditorWindow
         fo_shoes,
     }
 
-    [MenuItem("AI_ClothColliders/Copy L colliders to R")]
+    [MenuItem("IL_ClothColliders/Copy L colliders to R")]
     private static void CopyLtoR()
     {
         foreach (var collider in GameObject.FindObjectsOfType<Collider>())

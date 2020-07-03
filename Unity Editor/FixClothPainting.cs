@@ -10,7 +10,7 @@ public static class FixClothPainting
     private static GameObject _savedSelection;
     private static float _restoreSelectionTimer;
 
-    [MenuItem("AI_ClothColliders/Fix Collider", false, 100)]
+    [MenuItem("IL_ClothColliders/Fix cloth painting", false, 100)]
     static void FixClothCollider()
     {
         if (Selection.activeGameObject != null)
