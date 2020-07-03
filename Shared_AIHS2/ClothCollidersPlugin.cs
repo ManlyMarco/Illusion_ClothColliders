@@ -23,7 +23,7 @@ namespace AI_ClothColliders
     [BepInPlugin(GUID, PluginName, Version)]
     public partial class ClothCollidersPlugin : BaseUnityPlugin
     {
-        public const string Version = "1.0";
+        public const string Version = "1.0.1";
         internal static new ManualLogSource Logger;
         private const string ManifestGUID = "ClothColliders";
 
