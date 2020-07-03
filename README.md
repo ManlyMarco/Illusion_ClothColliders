@@ -1,5 +1,5 @@
-# AI_ClothColliders
-Plugin for AI-Shoujo that allows zipmods to easily add cloth physics to clothes and make them interact with the characters. This plugin doesn't do anything by itself, you also need to get some compatible mods.
+# Illusion_ClothColliders
+Plugin for AI-Shoujo and HoneySelect2 that allows zipmods to easily add cloth physics to clothes and make them interact with the characters. This plugin doesn't do anything by itself, you also need to get some compatible mods.
 
 [Preview video by R4setsu with his clothes mod](https://www.youtube.com/watch?v=9wcddjzqfhE)
 
