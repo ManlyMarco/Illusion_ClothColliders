@@ -9,6 +9,7 @@ using BepInEx.Harmony;
 using BepInEx.Logging;
 using HarmonyLib;
 using JetBrains.Annotations;
+using KKAPI;
 using KKAPI.Chara;
 using KKAPI.Utilities;
 using Sideloader;
@@ -17,10 +18,14 @@ using UnityEngine;
 
 namespace AI_ClothColliders
 {
+    [BepInDependency(KoikatuAPI.GUID)]
+    [BepInDependency(Sideloader.Sideloader.GUID)]
+    [BepInPlugin(GUID, PluginName, Version)]
     public partial class ClothCollidersPlugin : BaseUnityPlugin
     {
         public const string Version = "1.0";
         internal static new ManualLogSource Logger;
+        private const string ManifestGUID = "ClothColliders";
 
         private void Start()
         {
@@ -56,8 +61,13 @@ namespace AI_ClothColliders
 
         private void LoadManifest(Manifest manifest)
         {
-            var clothElements = manifest.manifestDocument?.Root?.Element(GUID)?.Elements("cloth");
-            if (clothElements == null) return;
+            var manifestDocumentRoot = manifest.manifestDocument?.Root;
+            if (manifestDocumentRoot == null) return;
+
+            var clothManifestRoot = manifestDocumentRoot.Element(ManifestGUID) ?? manifestDocumentRoot.Element("AI_ClothColliders"); // Import from old tag
+            if (clothManifestRoot == null) return;
+
+            var clothElements = clothManifestRoot.Elements("cloth");
 
             Logger.LogDebug($"Loading cloth collider data for {manifest.GUID}");
             foreach (var clothData in clothElements)
