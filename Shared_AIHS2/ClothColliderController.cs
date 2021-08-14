@@ -4,7 +4,7 @@ using KKAPI;
 using KKAPI.Chara;
 using UnityEngine;
 
-namespace AI_ClothColliders
+namespace ClothColliders
 {
     public class ClothColliderController : CharaCustomFunctionController
     {
@@ -43,7 +43,8 @@ namespace AI_ClothColliders
                                                                  sphereResults
                                                                      .SelectMany(pair => new[] { pair.second, pair.first })
                                                                      .Where(x => x != null)
-                                                                     .Select(x => x.transform.parent.name)));
+                                                                     .Select(x => x.transform.parent.name)
+                                                                     .ToArray()));
                     }
                 }
 
@@ -62,7 +63,8 @@ namespace AI_ClothColliders
                         ClothCollidersPlugin.Logger.LogDebug("Added capsule colliders to bone " + target.name + ": " +
                                                              string.Join(", ",
                                                                  capsuleResults.Where(x => x != null)
-                                                                     .Select(x => x.transform.parent.name)));
+                                                                     .Select(x => x.transform.parent.name)
+                                                                     .ToArray()));
                     }
                 }
 
@@ -93,11 +95,11 @@ namespace AI_ClothColliders
                 .Concat((capsuleColliders ?? Enumerable.Empty<CapsuleColliderData>()).Select(x => x.ClothName)).Distinct().ToList();
             var clothNames = targets.Where(x => x != null).Select(cloth => cloth.name).ToList();
 
-            ClothCollidersPlugin.Logger.LogDebug("Cleared old colliders and applied new colliders to cloths: " + string.Join(", ", targetBonesNames.Intersect(clothNames)));
+            ClothCollidersPlugin.Logger.LogDebug("Cleared old colliders and applied new colliders to cloths: " + string.Join(", ", targetBonesNames.Intersect(clothNames).ToArray()));
 
             var missing = targetBonesNames.Except(clothNames).ToList();
             if (missing.Count > 0)
-                ClothCollidersPlugin.Logger.LogWarning("Could not find following bones to apply colliders: " + string.Join(", ", missing.OrderBy(s => s)));
+                ClothCollidersPlugin.Logger.LogWarning("Could not find following bones to apply colliders: " + string.Join(", ", missing.OrderBy(s => s).ToArray()));
         }
 
         private SphereCollider AddSphereCollider(SphereColliderData sphereColliderData)
@@ -156,6 +158,8 @@ namespace AI_ClothColliders
             {
                 colliderObject = new GameObject(colliderName).transform;
                 colliderObject.transform.SetParent(bone.transform, false);
+                colliderObject.transform.localScale = Vector3.one;
+                colliderObject.transform.localPosition = Vector3.zero;
             }
 
             var collider = colliderObject.GetComponent<CapsuleCollider>();

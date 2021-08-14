@@ -1,4 +1,4 @@
-﻿namespace AI_ClothColliders
+﻿namespace ClothColliders
 {
     internal sealed class SphereColliderPair
     {

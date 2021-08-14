@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
-using AIChara;
 using BepInEx;
-using BepInEx.Harmony;
 using BepInEx.Logging;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -15,17 +13,25 @@ using KKAPI.Utilities;
 using Sideloader;
 using Sideloader.AutoResolver;
 using UnityEngine;
+#if AI || HS2
+using AIChara;
+#endif
 
-namespace AI_ClothColliders
+namespace ClothColliders
 {
     [BepInDependency(KoikatuAPI.GUID)]
     [BepInDependency(Sideloader.Sideloader.GUID)]
     [BepInPlugin(GUID, PluginName, Version)]
-    public partial class ClothCollidersPlugin : BaseUnityPlugin
+    public class ClothCollidersPlugin : BaseUnityPlugin
     {
-        public const string Version = "1.0.1";
-        internal static new ManualLogSource Logger;
+        public const string PluginName = "Cloth colliders support";
+        public const string GUID = "ClothColliders";
         private const string ManifestGUID = "ClothColliders";
+        public const string Version = "1.0.1";
+        
+        private const ChaListDefine.CategoryNo FirstClothingCategoryNo = ChaListDefine.CategoryNo.fo_top;
+
+        internal static new ManualLogSource Logger;
 
         private void Start()
         {
@@ -51,7 +57,7 @@ namespace AI_ClothColliders
                 return;
             }
 
-            HarmonyWrapper.PatchAll(typeof(ClothCollidersPlugin));
+            Harmony.CreateAndPatchAll(typeof(ClothCollidersPlugin));
             CharacterApi.RegisterExtraBehaviour<ClothColliderController>(GUID);
         }
 
@@ -73,7 +79,7 @@ namespace AI_ClothColliders
             foreach (var clothData in clothElements)
             {
                 var category = (ChaListDefine.CategoryNo)Enum.Parse(typeof(ChaListDefine.CategoryNo), clothData.Attribute("category")?.Value ?? throw new FormatException("Missing category attribute"));
-                var clothPartId = category - ChaListDefine.CategoryNo.fo_top;
+                var clothPartId = category - FirstClothingCategoryNo;
 
                 var clothName = clothData.Attribute("clothName")?.Value ?? throw new FormatException("Missing clothName attribute");
 

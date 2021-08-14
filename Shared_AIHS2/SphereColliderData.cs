@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AI_ClothColliders
+namespace ClothColliders
 {
     internal class SphereColliderData
     {
