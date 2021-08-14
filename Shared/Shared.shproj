@@ -8,6 +8,17 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.Common.Default.props" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.Common.props" />
   <PropertyGroup />
-  <Import Project="Shared_AIHS2.projitems" Label="Shared" />
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="CapsuleColliderData.cs" />
+    <Compile Include="ClothColliderController.cs" />
+    <Compile Include="ClothCollidersPlugin.cs" />
+    <Compile Include="SphereColliderData.cs" />
+    <Compile Include="SphereColliderPair.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shared.projitems" />
+  </ItemGroup>
+  <Import Project="Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
 </Project>
