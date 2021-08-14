@@ -28,8 +28,12 @@ namespace ClothColliders
         public const string GUID = "ClothColliders";
         private const string ManifestGUID = "ClothColliders";
         public const string Version = "1.0.1";
-        
+
+#if AI || HS2
         private const ChaListDefine.CategoryNo FirstClothingCategoryNo = ChaListDefine.CategoryNo.fo_top;
+#else
+        private const ChaListDefine.CategoryNo FirstClothingCategoryNo = ChaListDefine.CategoryNo.co_top;
+#endif
 
         internal static new ManualLogSource Logger;
 
