@@ -27,7 +27,7 @@ function CreateZip ($element)
     {
         $ver = "v" + $copiedFiles[0].VersionInfo.FileVersion.ToString()
 
-        Compress-Archive -Path $copy -Force -CompressionLevel "Optimal" -DestinationPath ($dir + "out\" + $element + "_" + $plugName + "_" + $ver + ".zip")
+        Compress-Archive -Path $copy -Force -CompressionLevel "Optimal" -DestinationPath ($dir + "\" + $element + "_" + $plugName + "_" + $ver + ".zip")
     }
 }
 
