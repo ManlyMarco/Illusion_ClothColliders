@@ -27,7 +27,7 @@ namespace ClothColliders
         public const string PluginName = "Cloth colliders support";
         public const string GUID = "ClothColliders";
         private const string ManifestGUID = "ClothColliders";
-        public const string Version = "1.0.1";
+        public const string Version = "1.1";
 
 #if AI || HS2
         private const ChaListDefine.CategoryNo FirstClothingCategoryNo = ChaListDefine.CategoryNo.fo_top;
