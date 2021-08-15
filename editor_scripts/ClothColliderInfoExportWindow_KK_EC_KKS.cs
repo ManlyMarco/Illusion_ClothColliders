@@ -121,7 +121,8 @@ public class ClothColliderInfoExportWindow : EditorWindow
 
     private static string ExportVector(Vector3 vector)
     {
-        return $"{vector.x.ToString("F", CultureInfo.InvariantCulture)}, {vector.y.ToString("F", CultureInfo.InvariantCulture)}, {vector.z.ToString("F", CultureInfo.InvariantCulture)}";
+        return string.Format("{0}, {1}, {2}", vector.x.ToString("F", CultureInfo.InvariantCulture),
+            vector.y.ToString("F", CultureInfo.InvariantCulture), vector.z.ToString("F", CultureInfo.InvariantCulture));
     }
 
     /// <summary>
@@ -129,14 +130,14 @@ public class ClothColliderInfoExportWindow : EditorWindow
     /// </summary>
     private enum CategoryNo
     {
-        fo_top,// = 240,
-        fo_bot,
-        fo_inner_t,
-        fo_inner_b,
-        fo_gloves,
-        fo_panst,
-        fo_socks,
-        fo_shoes,
+        co_top, // 105
+        co_bot,
+        co_bra,
+        co_shorts,
+        co_gloves,
+        co_panst,
+        co_socks,
+        co_shoes,
     }
 
     [MenuItem("IL_ClothColliders/Copy L colliders to R")]
@@ -161,7 +162,10 @@ public class ClothColliderInfoExportWindow : EditorWindow
                     if (rightTransform != null) break;
                 }
                 if (searchTarget == null && rightTransform == null)
-                    rightTransform = GameObject.Find(rightName)?.transform;
+                {
+                    var rightGo = GameObject.Find(rightName);
+                    rightTransform = rightGo != null ? rightGo.transform : null;
+                }
 
                 if (rightTransform == null) continue;
 
