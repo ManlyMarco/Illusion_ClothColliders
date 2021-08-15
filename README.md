@@ -1,5 +1,5 @@
 # Illusion_ClothColliders
-Plugin for AI-Shoujo and HoneySelect2 that allows zipmods to easily add cloth physics to clothes and make them interact with the characters. This plugin doesn't do anything by itself, you also need to get some compatible mods.
+Plugin that allows zipmods to easily add cloth physics to clothes and make them interact with the characters. This plugin doesn't do anything by itself, you also need to get some compatible mods.
 
 [Preview video by R4setsu with his clothes mod](https://www.youtube.com/watch?v=9wcddjzqfhE)
 
@@ -10,11 +10,11 @@ Plugin for AI-Shoujo and HoneySelect2 that allows zipmods to easily add cloth ph
 
 ## How to make my mod compatible
 There's a full guide available [here](https://github.com/ManlyMarco/Illusion_ClothColliders/blob/master/AI_Cloth_Colliders_Tutorial.pdf). Below you can see a condensed version of this guide.
-1. Get the [AIS/HS2 Modding Tool](https://github.com/hooh-hooah/ModdingTool) and follow its readme to set up Unity Editor and open the project in it.
-2. Open the Modding project opened in Unity Editor, and drop [this file](https://raw.githubusercontent.com/ManlyMarco/Illusion_ClothColliders/master/Unity%20Editor/ClothColliderInfoExportWindow.cs) inside the `Assets/Editor` folder. After a moment a new menu option should appear on the menu bar - AI_ClothColliders.
+1. Get the [AIS/HS2 Modding Tool](https://github.com/hooh-hooah/ModdingTool) or the [Koikatsu/EC Modding Tool](https://github.com/IllusionMods/KoikatsuModdingTools) and follow its readme to set up Unity Editor and open the project in it.
+2. Open the Modding project opened in Unity Editor, and drop [this file](https://raw.githubusercontent.com/ManlyMarco/Illusion_ClothColliders/master/Unity%20Editor/ClothColliderInfoExportWindow.cs) inside the `Assets/Editor` folder. After a moment a new menu option should appear on the menu bar - ClothColliders.
 3. Make sure you have one character in the current scene. Place your clothes on the character, and set up the Cloth components on the clothes and colliders on the character. You need to link the colliders to the Cloth components.
-**Note:** You can apply colliders to only the Left bones (ending with _L), and then use menu option `AI_ClothColliders/Copy L colliders to R` to copy colliders to the right side.
-4. After you are happy with how the colliders are set up, use menu option "AI_ClothColliders/Show cloth collider exporter window".
+**Note:** You can apply colliders to only the Left bones (ending with _L), and then use menu option `ClothColliders/Copy L colliders to R` to copy colliders to the right side.
+4. After you are happy with how the colliders are set up, use menu option "ClothColliders/Show cloth collider exporter window".
 5. Put in information about your clothes (it needs to match with the information in your list files) and paste the result to your zipmod's manifest.xml. 
 **Note:** Each cloth component is identified by its name, so you need to export each cloth component separately and then combine the exports into your zipmod's manifest.xml file.
 
