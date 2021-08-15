@@ -1,6 +1,6 @@
 # Config ------------------
 $plugName = "ClothColliders"
-$gamePrefixes = @("KK", "AI", "EC", "HS2")
+$gamePrefixes = @("KK", "AI", "EC", "HS2", "KKS")
 
 # Env setup ---------------
 if ($PSScriptRoot -match '.+?\\bin\\?') {
@@ -12,15 +12,13 @@ else {
 
 $copy = $dir + "\copy\BepInEx" 
 
-New-Item -ItemType Directory -Force -Path ($dir + "\out")  
-
 # Create releases ---------
 function CreateZip ($element)
 {
     Remove-Item -Force -Path ($dir + "\copy") -Recurse -ErrorAction SilentlyContinue
     New-Item -ItemType Directory -Force -Path ($copy + "\plugins")
 
-    Copy-Item -Path ($dir + "\BepInEx\plugins\" + $element + "*.*") -Destination ($copy + "\plugins\" ) -Recurse -Force 
+    Copy-Item -Path ($dir + "\BepInEx\plugins\" + $element + "_*.*") -Destination ($copy + "\plugins\" ) -Recurse -Force 
 
     $copiedFiles = Get-ChildItem -Path ($copy) -Filter "*.dll" -Recurse -Force;
     if($copiedFiles)
